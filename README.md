@@ -1,4 +1,4 @@
-# Android SDK
+# Android SDK 0.7
 
 ## Getting started
 
@@ -17,7 +17,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 ### Android Studio Setup
 
 1. Ensure that your Minimum SDK is API 16: Android 4.1;
-2. Add the provided truesdk-0.6.aar file into your libs folder. Example path: /app/libs/ ;
+2. Add the provided truesdk-0.7.aar file into your libs folder. Example path: /app/libs/ ;
 3. Open the build.gradle of your application module and firstly ensure that your lib folder can be used as a repository:
 
     ```java
@@ -47,63 +47,102 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
     </application>
     ```
 
-6. Add the TrueButton view in the selected layout:
+6. Add the TrueButton view in the selected layout. You can have only one TrueButton per Activity
 
     ```java
-    <!--
-    You can have only one TrueButton per Activity
-    Android Studio should offer auto complete for the truesdk:truebutton_text values
-    The possibilities are:
-    truesdk:truebutton_text="autoFill"
-    truesdk:truebutton_text="autoFillShort"
-    truesdk:truebutton_text="signIn"
-    truesdk:truebutton_text="signInShort"
-    truesdk:truebutton_text="signUp"
-    truesdk:truebutton_text="signUpShort"
-    truesdk:truebutton_text="register"
-    truesdk:truebutton_text="registerShort"
-    truesdk:truebutton_text="cont"
-    truesdk:truebutton_text="contShort"
-    Defaults to "autoFill"
-    -->
+    
     <com.truecaller.android.sdk.TrueButton
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    truesdk:truebutton_text="autoFill"/>
+    truesdk:truebutton_text="cont"/>
     ```
 
 7. In your selected Activity
 
-   - Either make your Activity implement ITrueCallback or create an instance. This interface has 2 method: onSuccesProfileShared(TrueProfile) and onFailureProfileShared(TrueError).
+   - Either make your Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
+   
+   `
+       private final ITrueCallback sdkCallback = new ITrueCallback() {
+        @Override
+        public void onSuccessProfileShared(@NonNull final TrueProfile trueProfile) {
+            Toast.makeText(SignInActivity.this, "Verified without OTP! (Truecaller User): " + trueProfile.firstName,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFailureProfileShared(@NonNull final TrueError trueError) {
+            Toast.makeText(SignInActivity.this, "onFailureProfileShared: " + trueError.getErrorType(), Toast
+                    .LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onOtpRequired() {
+	    TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);
+        }
+    };
+   `
     
-   - Create an instance of TrueClient in the onCreate method:
+   - Similarly, make your Activity implement OtpCallback or create an instance. This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
+   
+   `
+       static final OtpCallback apiCallback = new OtpCallback() {
+
+        @Override
+        public void onOtpSuccess(int requestCode, @Nullable Bundle bundle) {
+            if (requestCode == OtpCallback.MODE_OTP_SENT) {
+                Toast.makeText( mContext, "OTP Sent", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Verified With OTP", Toast.LENGTH_SHORT).show();
+                String accessToken = bundle.getString("TC_KEY_EXTRA_ACCESS_TOKEN");
+            }
+        }
+
+        @Override
+        public void onOtpFailure(final int requestCode, @NonNull final TrueException e) {
+            Toast.makeText(mContext, "OnFailureApiCallback: " + e.getExceptionMessage(), Toast
+                    .LENGTH_SHORT).show();
+        }
+    };
+   `
+    
+    
+   - Initialise the TrueSDK in the onCreate method:
     
      ```java
-     mTrueClient = new TrueClient(Context, ITrueCallback);
+     TrueSDK.init(this, sdkCallback);
      ```
-    (Optional) You can set an unique requestID for every profile request with `mTrueClient.setRequestNonce(customHash);`
-	- Provide to the TrueButton the created TrueClient:
+    
+    (Optional) You can set an unique requestID for every profile request with     `TrueSDK.getInstance().setRequestNonce(customHash);`
+
+     - Initialise the TrueButton in the onCreate method:
 
       ```java
-      ((TrueButton) findViewById(R.id.com_truecaller_android_sdk_truebutton)).setTrueClient(mTrueClient);
+      TrueButton trueButton = findViewById(R.id.com_truecaller_android_sdk_truebutton);
       ```
     
-      The TrueButton knows whether it is usable or not: ((TrueButton) findViewById(R.id.com_truecaller_android_sdk_truebutton)).isUsable(); This can be used as a strategy for hiding the button.
    - Add in the onActivityResult method the following condition:
 
       ```java
-      if (mTrueClient.onActivityResult(requestCode, resultCode, data)) {
-          return;
-      }
+      TrueSDK.getInstance().onActivityResultObtained(resultCode, data);
       ```
-   - Write all the relevant logic in onSuccesProfileShared(TrueProfile) for displaying the information you have just received and onFailureProfileShared(TrueError) for handling the error and notify the user.
+      
+   - Write all the relevant logic in onSuccesProfileShared(TrueProfile) for displaying the information you have just received and onFailureProfileShared(TrueError) for handling the error and notify the user. If truecaller app is not installed on the device, the control would be passed to onOtpRequired method. You can initiate the OTP verification flow from within this callback method by using :
+   `
+   TrueSDK.getInstance().requestVerification("IN", PHONE_NUMBER_STRING, OtpCallback);
+   
+   	Here, the first parameter is the country code of the mobile number on which the OTP needs to be trigerred
+   	and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
+   `
 
+     The control would now pass to one of the method of OtpCallback. Write the relevant logic
+     
   	 (Optional)  
-     In other to use a custom button instead of the default TrueButton call mTrueClient.getTruecallerUserProfile() in its onClick listner. Make sure your button follow our visual guidelines.
+     In order to use a custom button instead of the default TrueButton call trueButton.onClick(trueButton) in its onClick listner. Make sure your button follow our visual guidelines.
 
 ### Advanced and Optional
 
-#### A. Server side Truecaller Profile authenticity check
+#### A. Server side Truecaller Profile authenticity check [ for users who verified via Truecaller app consent flow ]
 
 Inside TrueProfile class there are 2 important fields, payload and signature. Payload is a Base64 encoding of the json object containing all profile info of the user. Signature contains the payload's signature. You can forward these fields back to your backend and verify the authenticity of the information by:
 
