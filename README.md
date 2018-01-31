@@ -82,23 +82,25 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 
    - Either make your Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
    
-   ```
+   ```java
        private final ITrueCallback sdkCallback = new ITrueCallback() {
+       
         @Override
         public void onSuccessProfileShared(@NonNull final TrueProfile trueProfile) {
-	// This method is invoked when either the truecaller app is installed on the device and the user gives his consent
-	// to share his truecaller profile OR when the user has already been verified before on the same device using the
-	// same number and hence does not need OTP to verify himself again. 
 	
-            Toast.makeText(SignInActivity.this, "Verified without OTP! (Truecaller User): " + trueProfile.firstName,
+		// This method is invoked when either the truecaller app is installed on the device and the user gives his
+		// consent to share his truecaller profile OR when the user has already been verified before on the same
+		// device using the same number and hence does not need OTP to verify himself again. 
+	
+		Toast.makeText(SignInActivity.this, "Verified without OTP! (Truecaller User): " + trueProfile.firstName,
                     Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onFailureProfileShared(@NonNull final TrueError trueError) {
-	// This method is invoked when some error occurs or if an invalid request for verification is made 
+		// This method is invoked when some error occurs or if an invalid request for verification is made 
 	
-            Toast.makeText(SignInActivity.this, "onFailureProfileShared: " + trueError.getErrorType(), Toast
+		Toast.makeText(SignInActivity.this, "onFailureProfileShared: " + trueError.getErrorType(), Toast
                     .LENGTH_SHORT).show();
 
         }
@@ -106,14 +108,14 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
         @Override
         public void onOtpRequired() {
 	
-	    // This method is invoked when truecaller app is not present on the device or if the user does not want to
-	    // share his truecaller profile and hence, OTP verification is required to complete the verification flow
-	    // You can initiate the OTP verification flow from within this callback method by using :
+		// This method is invoked when truecaller app is not present on the device or if the user does not want to
+		// share his truecaller profile and hence, OTP verification is required to complete the verification flow
+		// You can initiate the OTP verification flow from within this callback method by using :
 	   
-	    TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);
+		TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);
 	    
-   	    //  Here, the first parameter is the country code of the mobile number on which the OTP needs to be trigerred
-	    //  and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
+		//  Here, the first parameter is the country code of the mobile number on which the OTP needs to be
+		// triggered and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
 	
         }
     };
@@ -125,32 +127,33 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
    Similarly, make your Activity implement OtpCallback or create an instance ( Once the OTP verification is triggered using the 'requestVerification' method, the control would then be passed to OtpCallback ) .
    This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
    
-   ```
+   ```java
        static final OtpCallback apiCallback = new OtpCallback() {
 
         @Override
         public void onOtpSuccess(int requestCode, @Nullable Bundle bundle) {
             if (requestCode == OtpCallback.MODE_OTP_SENT) {
 	    
-	        // This method is invoked when the OTP has been sent to the input mobile number.
-	        // You can now ask the user to input the 6-digit OTP code sent to him via SMS and ask for his
-	        // first name and last name
+	    	// This method is invoked when the OTP has been sent to the input mobile number.
+		// You can now ask the user to input the 6-digit OTP code sent to him via SMS and ask for his
+		// first name and last name
 	    
-                Toast.makeText( mContext, "OTP Sent", Toast.LENGTH_SHORT).show();
+		Toast.makeText( mContext, "OTP Sent", Toast.LENGTH_SHORT).show();
 		
             } else {
 	    
-	        // This method is invoked when the user has successfully input the correct OTP code along with his
-	        // first name and last name and is verified successfully by the SDK
+		// This method is invoked when the user has successfully input the correct OTP code along with his
+		// first name and last name and is verified successfully by the SDK
 	    
-                Toast.makeText(mContext, "Verified With OTP", Toast.LENGTH_SHORT).show();
+		Toast.makeText(mContext, "Verified With OTP", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onOtpFailure(final int requestCode, @NonNull final TrueException e) {
-	    // Invoked when some error has occured while verifying the provided mobile number via OTP
-            Toast.makeText(mContext, "OnFailureApiCallback: " + e.getExceptionMessage(), Toast
+	    
+		// Invoked when some error has occured while verifying the provided mobile number via OTP
+		Toast.makeText(mContext, "OnFailureApiCallback: " + e.getExceptionMessage(), Toast
                     .LENGTH_SHORT).show();
         }
     };
