@@ -149,9 +149,55 @@ Inside TrueProfile class there are 2 important fields, payload and signature. Pa
 1. Fetch Truecaller public keys using this api: https://api4.truecaller.com/v1/key (you need to fetch the keys only if you have never done it or if you cannot verify the signature with any of the already cached keys);
 2. Loop through the public keys and try to verify the signature and payload;
 
-IMPORTANT: TrueSDK already verifies the authenticity of the response before forwarding it to the your app.
+IMPORTANT: Truecaller SDK already verifies the authenticity of the response before forwarding it to the your app.
 
-#### B. Request-Response correlation check
+#### B. Server side Truecaller Profile authenticity check [ for users who verified via Truecaller OTP flow ]
+
+In OnSuccess method of OtpCallback, in case of MODE_VERIFIED, you can fetch the access token string. You can forward this field back to your backend and verify the authenticity of the information by using the following endpoint:
+
+**Endpoint:**  
+https://api4.truecaller.com/v1/otp/installation/validate/{accessToken}
+
+**Method:**  
+POST
+
+**Header parameters:**
+
+| **Parameter [Type]** | **Required** | **Description**         | **Example**                            |
+| -------------------  | ------------ | ----------------------- | -------------------------------------- |
+| appKey [String]      | yes          | Applications secret key | zHTqS70ca9d3e988946f19a65a01dRR5e56460 |
+
+**Request path parameter:**
+
+| **Parameter [Type]** | **Required** | **Description**                                                     | **Example**              |
+| -------------------  | ------------ | ------------------------------------------------------------------- | ------------------------ |
+
+| accessToken       | yes           | token granted for the partner for the respective user number that initiated login | "71d8367e-39f7-4de5-a3a3-2066431b9ca8" |
+
+
+**Response Codes**
+
+- 200 OK - **Access Token is valid**
+- 404 Not Found - **If your credentials are not valid**
+{
+ "code": 404,
+ "message": "Invalid partner credentials."
+}
+- 404 Not Found - **If access token is not valid**
+{
+ "code": 1404,
+ "message": "Invalid access token."
+}
+- 500 Internal Error - **If any other internal error**
+{
+ "code": 500,
+ "message": "Fail to validate the token"
+}
+
+
+IMPORTANT: Truecaller SDK already verifies the authenticity of the response before forwarding it to the your app.
+
+#### C. Request-Response correlation check
 
 Every request sent via a Truecaller app that supports TrueSDK 0.6 has a unique identifier. This identifier is bundled into the response for assuring a correlation between a request and a response. If you want you can check this correlation yourself by:
 
