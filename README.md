@@ -92,17 +92,14 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 		// consent to share his truecaller profile OR when the user has already been verified before on the same
 		// device using the same number and hence does not need OTP to verify himself again. 
 	
-		Toast.makeText(SignInActivity.this, "Verified without OTP! (Truecaller User): " + trueProfile.firstName,
-                    Toast.LENGTH_SHORT).show();
+		Log.d( TAG, "Verified without OTP! (Truecaller User): " + trueProfile.firstName );
         }
 
         @Override
         public void onFailureProfileShared(@NonNull final TrueError trueError) {
 		// This method is invoked when some error occurs or if an invalid request for verification is made 
 	
-		Toast.makeText(SignInActivity.this, "onFailureProfileShared: " + trueError.getErrorType(), Toast
-                    .LENGTH_SHORT).show();
-
+		Log.d( TAG, "onFailureProfileShared: " + trueError.getErrorType() );
         }
 
         @Override
@@ -138,14 +135,14 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 		// You can now ask the user to input the 6-digit OTP code sent to him via SMS and ask for his
 		// first name and last name
 	    
-		Toast.makeText( mContext, "OTP Sent", Toast.LENGTH_SHORT).show();
+		Log.d( TAG, "OTP Sent" );
 		
             } else {
 	    
 		// This method is invoked when the user has successfully input the correct OTP code along with his
 		// first name and last name and is verified successfully by the SDK
 	    
-		Toast.makeText(mContext, "Verified With OTP", Toast.LENGTH_SHORT).show();
+		Log.d( TAG, "Verified with OTP" );
             }
         }
 
@@ -153,8 +150,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
         public void onOtpFailure(final int requestCode, @NonNull final TrueException e) {
 	    
 		// Invoked when some error has occured while verifying the provided mobile number via OTP
-		Toast.makeText(mContext, "OnFailureApiCallback: " + e.getExceptionMessage(), Toast
-                    .LENGTH_SHORT).show();
+		Log.d( TAG, "OnFailureApiCallback: " + e.getExceptionMessage() );
         }
     };
     
