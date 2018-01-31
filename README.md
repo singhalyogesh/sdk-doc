@@ -105,11 +105,11 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
         @Override
         public void onOtpRequired() {
 	
-		// This method is invoked when truecaller app is not present on the device or if the user does not want to
-		// share his truecaller profile and hence, OTP verification is required to complete the verification flow
+		// This method is invoked when truecaller app is not present on the device or if the user wants to
+		// continue with a different number and hence, OTP verification is required to complete the flow
 		// You can initiate the OTP verification flow from within this callback method by using :
 	   
-		TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);
+		TrueSDK.getInstance().requestVerification("IN", PHONE_NUMBER_STRING, apiCallback);
 	    
 		//  Here, the first parameter is the country code of the mobile number on which the OTP needs to be
 		// triggered and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
