@@ -57,10 +57,29 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
     truesdk:truebutton_text="cont"/>
     ```
 
-7. In your selected Activity
+7. Initialise the TrueSDK in the onCreate method:
+    
+     ```java
+     TrueSDK.init(this, sdkCallback);
+     ```
+    
+    (Optional) You can set an unique requestID for every profile request with     `TrueSDK.getInstance().setRequestNonce(customHash);`
+
+ 8. Initialise the TrueButton in the onCreate method:
+
+      ```java
+      TrueButton trueButton = findViewById(R.id.com_truecaller_android_sdk_truebutton);
+      ```
+    
+ 9. Add in the onActivityResult method the following condition:
+
+      ```java
+      TrueSDK.getInstance().onActivityResultObtained(resultCode, data);
+      ```
+      
+ 10. In your selected Activity
 
    - Either make your Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
-   
    `
        private final ITrueCallback sdkCallback = new ITrueCallback() {
         @Override
@@ -81,9 +100,18 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 	    TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);
         }
     };
+    
    `
     
-   - Similarly, make your Activity implement OtpCallback or create an instance. This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
+   Write all the relevant logic in onSuccesProfileShared(TrueProfile) for displaying the information you have just received and onFailureProfileShared(TrueError) for handling the error and notify the user. 
+   If truecaller app is not installed on the device, the control would be passed to onOtpRequired method. You can initiate the OTP verification flow from within this callback method by using :
+	`TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);`
+   
+   Here, the first parameter is the country code of the mobile number on which the OTP needs to be trigerred
+and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
+   
+   
+   Similarly, make your Activity implement OtpCallback or create an instance. This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
    
    `
        static final OtpCallback apiCallback = new OtpCallback() {
@@ -105,40 +133,9 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
         }
     };
    `
-    
-    
-   - Initialise the TrueSDK in the onCreate method:
-    
-     ```java
-     TrueSDK.init(this, sdkCallback);
-     ```
-    
-    (Optional) You can set an unique requestID for every profile request with     `TrueSDK.getInstance().setRequestNonce(customHash);`
-
-     - Initialise the TrueButton in the onCreate method:
-
-      ```java
-      TrueButton trueButton = findViewById(R.id.com_truecaller_android_sdk_truebutton);
-      ```
-    
-   - Add in the onActivityResult method the following condition:
-
-      ```java
-      TrueSDK.getInstance().onActivityResultObtained(resultCode, data);
-      ```
-      
-   - Write all the relevant logic in onSuccesProfileShared(TrueProfile) for displaying the information you have just received and onFailureProfileShared(TrueError) for handling the error and notify the user. If truecaller app is not installed on the device, the control would be passed to onOtpRequired method. You can initiate the OTP verification flow from within this callback method by using :
-   `
-   TrueSDK.getInstance().requestVerification("IN", PHONE_NUMBER_STRING, OtpCallback);
-   
-   	Here, the first parameter is the country code of the mobile number on which the OTP needs to be trigerred
-   	and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
-   `
-
-     The control would now pass to one of the method of OtpCallback. Write the relevant logic
-     
-  	 (Optional)  
-     In order to use a custom button instead of the default TrueButton call trueButton.onClick(trueButton) in its onClick listner. Make sure your button follow our visual guidelines.
+         
+  (Optional)  
+  In order to use a custom button instead of the default TrueButton call trueButton.onClick(trueButton) in its onClick listner. Make sure your button follow our visual guidelines.
 
 ### Advanced and Optional
 
@@ -178,16 +175,19 @@ POST
 
 - 200 OK - **Access Token is valid**
 - 404 Not Found - **If your credentials are not valid**
+
 {
  "code": 404,
  "message": "Invalid partner credentials."
 }
 - 404 Not Found - **If access token is not valid**
+
 {
  "code": 1404,
  "message": "Invalid access token."
 }
 - 500 Internal Error - **If any other internal error**
+
 {
  "code": 500,
  "message": "Fail to validate the token"
@@ -198,9 +198,9 @@ IMPORTANT: Truecaller SDK already verifies the authenticity of the response befo
 
 #### C. Request-Response correlation check
 
-Every request sent via a Truecaller app that supports TrueSDK 0.6 has a unique identifier. This identifier is bundled into the response for assuring a correlation between a request and a response. If you want you can check this correlation yourself by:
+Every request sent via a Truecaller app that supports truecaller SDK 0.7 has a unique identifier. This identifier is bundled into the response for assuring a correlation between a request and a response. If you want you can check this correlation yourself by:
 
-1. Generate the request identifier via the TrueClient: `mTrueClient.generateRequestNonce();` or use your own Nonce set with `mTrueClient.setRequestNonce(customHash);`
-2. `In ITrueCallback.onSuccesProfileShared(TrueProfile)` verify that the previously generated identifier matches the one in TrueProfile.requestNonce.
+1. You can use your own custom request identifier via the TrueClient with `TrueSDK.getInstance().setRequestNonce(customHash);`
+2. In `ITrueCallback.onSuccesProfileShared(TrueProfile)` verify that the previously generated identifier matches the one in TrueProfile.requestNonce.
 
-IMPORTANT: TrueSDK already verifies the Request-Response correlation before forwarding it to the your app.
+IMPORTANT: Truecaller SDK already verifies the Request-Response correlation before forwarding it to the your app.
