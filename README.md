@@ -129,21 +129,21 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 
         @Override
         public void onOtpSuccess(int requestCode, @Nullable Bundle bundle) {
-            if (requestCode == OtpCallback.MODE_OTP_SENT) {
+		if (requestCode == OtpCallback.MODE_OTP_SENT) {
 	    
-	    	// This method is invoked when the OTP has been sent to the input mobile number.
-		// You can now ask the user to input the 6-digit OTP code sent to him via SMS and ask for his
-		// first name and last name
+	    		// This method is invoked when the OTP has been sent to the input mobile number.
+			// You can now ask the user to input the 6-digit OTP code sent to him via SMS and ask for his
+			// first name and last name
 	    
-		Log.d( TAG, "OTP Sent" );
+			Log.d( TAG, "OTP Sent" );
 		
-            } else {
+		} else {
 	    
-		// This method is invoked when the user has successfully input the correct OTP code along with his
-		// first name and last name and is verified successfully by the SDK
+			// This method is invoked when the user has successfully input the correct OTP code along with his
+			// first name and last name and is verified successfully by the SDK
 	    
-		Log.d( TAG, "Verified with OTP" );
-            }
+			Log.d( TAG, "Verified with OTP" );
+		}
         }
 
         @Override
