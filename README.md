@@ -80,7 +80,8 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
  10. In your selected Activity
 
    - Either make your Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
-   `
+   
+   ```
        private final ITrueCallback sdkCallback = new ITrueCallback() {
         @Override
         public void onSuccessProfileShared(@NonNull final TrueProfile trueProfile) {
@@ -101,11 +102,13 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
         }
     };
     
-   `
+   ```
     
    Write all the relevant logic in onSuccesProfileShared(TrueProfile) for displaying the information you have just received and onFailureProfileShared(TrueError) for handling the error and notify the user. 
    If truecaller app is not installed on the device, the control would be passed to onOtpRequired method. You can initiate the OTP verification flow from within this callback method by using :
+	
 	`TrueSDK.getInstance().requestVerification("IN", phone, apiCallback);`
+   
    
    Here, the first parameter is the country code of the mobile number on which the OTP needs to be trigerred
 and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
@@ -113,7 +116,7 @@ and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
    
    Similarly, make your Activity implement OtpCallback or create an instance. This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
    
-   `
+   ```
        static final OtpCallback apiCallback = new OtpCallback() {
 
         @Override
@@ -132,7 +135,8 @@ and PHONE_NUMBER_STRING should be the 10-digit mobile number of the user
                     .LENGTH_SHORT).show();
         }
     };
-   `
+    
+   ```
          
   (Optional)  
   In order to use a custom button instead of the default TrueButton call trueButton.onClick(trueButton) in its onClick listner. Make sure your button follow our visual guidelines.
