@@ -171,7 +171,6 @@ POST
 
 | **Parameter [Type]** | **Required** | **Description**                                                                   | **Example**                            |
 | -------------------  | ------------ | --------------------------------------------------------------------------------- | -------------------------------------- |
-
 | accessToken          | yes          | token granted for the partner for the respective user number that initiated login | "71d8367e-39f7-4de5-a3a3-2066431b9ca8" |
 
 
