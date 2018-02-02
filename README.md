@@ -128,7 +128,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
        static final OtpCallback apiCallback = new OtpCallback() {
 
         @Override
-        public void onOtpSuccess(int requestCode, @Nullable Bundle bundle) {
+        public void onOtpSuccess(int requestCode, @Nullable String s) {
 		if (requestCode == OtpCallback.MODE_OTP_SENT) {
 	    
 	    		// This method is invoked when the OTP has been sent to the input mobile number.
