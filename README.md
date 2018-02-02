@@ -75,7 +75,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
  9. Add the following condition in the onActivityResult method:
 
       ```java
-      TrueSDK.getInstance().onActivityResultObtained(resultCode, data);
+      TrueSDK.getInstance().onActivityResultObtained( this,resultCode, data);
       ```
       
  10. In your selected Activity
