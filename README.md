@@ -4,7 +4,7 @@
 
 ### Account Setup
 
-To ensure the authenticity of the interactions between your app and Truecaller, you need to supply us with your package name and SHA-1 signing-fingerprint.
+To ensure the authenticity of the interactions between your app and Truecaller, you need to generate a partner key from the truecaller developer portal ( https://developer.truecaller.com/auth/login ) by providing us with your package name and SHA-1 signing-fingerprint.
 
 You package name corresponds to the applicationId in your app level build.gradle file. Use the following command to get the fingerprint:
 
@@ -16,7 +16,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 
 ### Using the SDK with your Android Studio Project
 
-1. Ensure that your Minimum SDK version is API level 16 or above ( Android 4.1 ). In case your android project compiles for API level below 16, you can include the following line in your AndroidManifest.xml file to avoid any compilation issues :
+1. Ensure that your Minimum SDK version is atleast API level 16 or above ( Android 4.1 ). In case your android project compiles for API level below 16, you can include the following line in your AndroidManifest.xml file to avoid any compilation issues :
 ```java
 <uses-sdk tools:overrideLibrary="com.truecaller.android.sdk"/>
 ```
