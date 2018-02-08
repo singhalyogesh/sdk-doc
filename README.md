@@ -6,19 +6,24 @@
 
 To ensure the authenticity of the interactions between your app and Truecaller, you need to supply us with your package name and SHA-1 signing-fingerprint.
 
-Get the package name from your AndroidManifest.xml file. Use the following command to get the fingerprint:
+You package name corresponds to the applicationId in your app level build.gradle file. Use the following command to get the fingerprint:
 
 ```java
 keytool -list -v -keystore mystore.keystore
 ```
 
-Once we have received the package name and the SHA-1 signing-fingerprint, we will provide you with a unique "PartnerKey".
+Once we have received the package name and the SHA-1 signing-fingerprint, we will provide you with a unique "PartnerKey" which you need to include in your project to authorize all verification requests.
 
 ### Using the SDK with your Android Studio Project
 
-1. Ensure that your Minimum SDK is API 16: Android 4.1
+1. Ensure that your Minimum SDK version is API level 16 or above ( Android 4.1 ). In case your android project compiles for API level below 16, you can include the following line in your AndroidManifest.xml file to avoid any compilation issues :
+```java
+<uses-sdk tools:overrideLibrary="com.truecaller.android.sdk"/>
+```
+Using this would ensure that the sdk works normally for API level 16 & above, and would be disabled for API level < 16
+
 2. Add the provided truesdk-0.7-releasePartner.aar file into your libs folder. Example path: /app/libs/ 
-3. Open the build.gradle of your application module and firstly ensure that your lib folder can be used as a repository:
+3. Open the build.gradle of your application module and ensure that your lib folder can be used as a repository:
 
     ```java
     repositories {
@@ -64,7 +69,8 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
      TrueSDK.init(this, sdkCallback);
      ```
     
-    (Optional) You can set an unique requestID for every profile request with     	`TrueSDK.getInstance().setRequestNonce(customHash);`
+    (Optional) You can set a unique requestID for every profile request with     	`TrueSDK.getInstance().setRequestNonce(customHash);`
+    Note : The customHash must be a base64 URL safe string with a minimum character length of 8 and maximum of 64 characters
 
  8. Initialise the TrueButton in the onCreate method:
 
@@ -80,7 +86,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
       
  10. In your selected Activity
 
-   - Either make your Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
+   - Either make the Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
    
    ```java
        private final ITrueCallback sdkCallback = new ITrueCallback() {
@@ -137,7 +143,7 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 	    
 			Log.d( TAG, "OTP Sent" );
 		
-		} else {
+		} else if ( requestCode == OtpCallback.MODE_VERIFIED ) {
 	    
 			// This method is invoked when the user has successfully input the correct OTP code along with his
 			// first name and last name and is verified successfully by the SDK
