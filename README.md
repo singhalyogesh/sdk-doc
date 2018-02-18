@@ -23,15 +23,10 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 #### B. Truecaller app not present on device
 
  - User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
-
 ![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/1.png)
-
  - User verifying on an app using Truecaller SDK when he has already been verified earlier using his mobile number on that device in the same app or any other app present on the device :
-
 ![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/2.png)
-
-User verifying on an app using Truecaller SDK using either a different phone number on the same device or using the same number on a different device :
-
+ - User verifying on an app using Truecaller SDK using either a different phone number on the same device or using the same number on a different device :
 ![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/3.png)
 
 
