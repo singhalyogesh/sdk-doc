@@ -59,7 +59,7 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
     Add the following dependencies within your gradle file :
     ```java
     	implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-        implementation 'com.squareup.okhttp3:okhttp:3.7.0'
+	implementation 'com.squareup.okhttp3:okhttp:3.7.0'
     ```
 
 4. Open your strings.xml file. Example path: /app/src/main/res/values/strings.xml and add a new string with the name "partnerKey" and value as your "PartnerKey"
@@ -107,7 +107,8 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
       
  10. In your selected Activity
 
-   - Either make the Activity implement ITrueCallback or create an instance. This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
+   - Either make the Activity implement ITrueCallback or create an instance. 
+   This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
    
    ```java
        private final ITrueCallback sdkCallback = new ITrueCallback() {
@@ -183,6 +184,11 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
     
    ```
          
+   The SMS sent by Truecaller would be in a below mentioned standard format containing a 6-digit numeric code along with your app name ( as configured by you while creating the app key using your Truecaller developer portal account ). You can use this format to auto-read and fill the OTP code in your app activity
+   ```
+   <<123456>> is your verification code for <<AppName>> (Verification Powered by Truecaller)
+   ```
+   
    To complete the verification once the OTP has been sent to the provided mobile number, complete the verification process by calling the following method from within your activity :
    
    ```
