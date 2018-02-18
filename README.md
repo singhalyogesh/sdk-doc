@@ -18,15 +18,15 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 
 User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
 
-![Diagram](https://raw.githubusercontent.com/singhalyogesh/sdk-doc/blob/master/1.png)
+![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/1.png)
 
 User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
 
-![Diagram](https://raw.githubusercontent.com/singhalyogesh/sdk-doc/blob/master/1.png)
+![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/2.png)
 
 User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
 
-![Diagram](https://raw.githubusercontent.com/singhalyogesh/sdk-doc/blob/master/1.png)
+![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/3.png)
 
 But let's get down to the details.
 
