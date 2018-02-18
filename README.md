@@ -58,8 +58,8 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
     ```
     Add the following dependencies within your gradle file :
     ```java
-    	implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-	implementation 'com.squareup.okhttp3:okhttp:3.7.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
     ```
 
 4. Open your strings.xml file. Example path: /app/src/main/res/values/strings.xml and add a new string with the name "partnerKey" and value as your "PartnerKey"
@@ -91,6 +91,7 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
      ```
     
     (Optional) You can set a unique requestID for every profile request with     	`TrueSDK.getInstance().setRequestNonce(customHash);`
+    
     Note : The customHash must be a base64 URL safe string with a minimum character length of 8 and maximum of 64 characters
 
  8. Initialise the TrueButton in the onCreate method:
@@ -108,7 +109,7 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
  10. In your selected Activity
 
    - Either make the Activity implement ITrueCallback or create an instance. 
-   This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
+	This interface has 3 methods: onSuccesProfileShared(TrueProfile), onFailureProfileShared(TrueError) and onOtpRequired()
    
    ```java
        private final ITrueCallback sdkCallback = new ITrueCallback() {
@@ -150,7 +151,7 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
    Write all the relevant logic in onSuccesProfileShared(TrueProfile) for displaying the information you have just received and onFailureProfileShared(TrueError) for handling the error and notify the user.
    
    Similarly, make your Activity implement OtpCallback or create an instance ( Once the OTP verification is triggered using the 'requestVerification' method, the control would then be passed to OtpCallback ) .
-   This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
+	This interface has 2 methods: onOtpSuccess(int, Bundle) and onOtpFailure(int, TrueException)
    
    ```java
        static final OtpCallback apiCallback = new OtpCallback() {
@@ -188,6 +189,7 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
    ```
    <<123456>> is your verification code for <<AppName>> (Verification Powered by Truecaller)
    ```
+   
    
    To complete the verification once the OTP has been sent to the provided mobile number, complete the verification process by calling the following method from within your activity :
    
