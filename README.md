@@ -16,19 +16,24 @@ Once we have received the package name and the SHA-1 signing-fingerprint, we wil
 
 ### Understanding how the user verification flow works
 
-User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
+#### A. Truecaller app present on device
+
+ - User starts by clicking on your Login / Signup CTA and would be shown the standard Truecaller consent popup asking for the user's consent. The user authorizes by clicking continue and their Truecaller profile would be shared with you
+
+#### B. Truecaller app not present on device
+
+ - User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
 
 ![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/1.png)
 
-User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
+ - User verifying on an app using Truecaller SDK when he has already been verified earlier using his mobile number on that device in the same app or any other app present on the device :
 
 ![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/2.png)
 
-User verifying on an app using Truecaller SDK for the first time using his mobile number on a device :
+User verifying on an app using Truecaller SDK using either a different phone number on the same device or using the same number on a different device :
 
 ![Diagram](https://github.com/singhalyogesh/sdk-doc/blob/master/3.png)
 
-But let's get down to the details.
 
 ### Using the SDK with your Android Studio Project
 
@@ -39,7 +44,7 @@ But let's get down to the details.
 Using this would ensure that the sdk works normally for API level 16 & above, and would be disabled for API level < 16
 
 2. Add the provided truesdk-0.7-releasePartner.aar file into your libs folder. Example path: /app/libs/ 
-3. Open the build.gradle of your application module and ensure that your lib folder can be used as a repository:
+3. Open the build.gradle of your application module and ensure that your lib folder can be used as a repository :
 
     ```java
     repositories {
@@ -49,12 +54,17 @@ Using this would ensure that the sdk works normally for API level 16 & above, an
     }
     ```
     
-    Secondly add the compile dependency with the latest version of the TrueSDK aar:
+    Secondly add the compile dependency with the latest version of the TrueSDK aar :
 
     ```java
     dependencies {
-        compile(name: "truesdk-0.7-releasePartner", ext: "aar")
+        implementation(name: "truesdk-0.7-releasePartner", ext: "aar")
     }
+    ```
+    Add the following dependencies within your gradle file :
+    ```java
+    	implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+        implementation 'com.squareup.okhttp3:okhttp:3.7.0'
     ```
 
 4. Open your strings.xml file. Example path: /app/src/main/res/values/strings.xml and add a new string with the name "partnerKey" and value as your "PartnerKey"
