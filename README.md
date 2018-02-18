@@ -14,6 +14,14 @@ keytool -list -v -keystore mystore.keystore
 
 Once we have received the package name and the SHA-1 signing-fingerprint, we will provide you with a unique "PartnerKey" which you need to include in your project to authorize all verification requests.
 
+### Understanding how the user verification flow works
+
+This is how it looks in a glance:
+
+![Diagram](https://raw.githubusercontent.com/truecaller/web-login/master/documentation/images/diagram.png)
+
+But let's get down to the details.
+
 ### Using the SDK with your Android Studio Project
 
 1. Ensure that your Minimum SDK version is atleast API level 16 or above ( Android 4.1 ). In case your android project compiles for API level below 16, you can include the following line in your AndroidManifest.xml file to avoid any compilation issues :
